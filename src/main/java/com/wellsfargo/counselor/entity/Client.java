@@ -1,59 +1,47 @@
 package com.wellsfargo.counselor.entity;
 
-
 import jakarta.persistence.*;
+import org.hibernate.annotations.Cascade;
 
 import java.util.List;
 
 @Entity
-public class Advisor {
+public class Client {
 
     @Id
-    @GeneratedValue()
-    private long advisorId;
+    @GeneratedValue(strategy  = GenerationType.IDENTITY)
+    private Long clientId;
 
-    @Column(nullable = false)
     private String firstName;
-
-    @Column(nullable = false)
     private String lastName;
-
-    @Column(nullable = false)
     private String address;
-
-    @Column(nullable = false)
     private String phone;
-
-    @Column(nullable = false)
     private String email;
 
+    @ManyToOne
+    @JoinColumn(name = "advisorId", nullable=false)
+    private Advisor advisor;
 
-    public List<Client> getClients() {
-        return clients;
-    }
+    @OneToMany(mappedBy = "client", cascade = CascadeType.ALL)
+    private List<Portfolio> portfolios;
 
-    public void setClients(List<Client> clients) {
-        this.clients = clients;
-    }
-
-    @OneToMany(mappedBy = "advisor", cascade = CascadeType.ALL)
-    private List<Client> clients;
-
-
-    protected Advisor() {
-
-    }
-
-    public Advisor(String firstName, String lastName, String address, String phone, String email) {
+    public Client(String firstName, String lastName, String address, String phone, String email, Advisor advisor) {
         this.firstName = firstName;
         this.lastName = lastName;
         this.address = address;
         this.phone = phone;
         this.email = email;
+        this.advisor = advisor;
     }
 
-    public Long getAdvisorId() {
-        return advisorId;
+    public Client() {}
+
+    public Long getClientId() {
+        return clientId;
+    }
+
+    public void setClientId(Long clientId) {
+        this.clientId = clientId;
     }
 
     public String getFirstName() {
@@ -94,5 +82,21 @@ public class Advisor {
 
     public void setEmail(String email) {
         this.email = email;
+    }
+
+    public Advisor getAdvisor() {
+        return advisor;
+    }
+
+    public void setAdvisor(Advisor advisor) {
+        this.advisor = advisor;
+    }
+
+    public List<Portfolio> getPortfolios() {
+        return portfolios;
+    }
+
+    public void setPortfolios(List<Portfolio> portfolios) {
+        this.portfolios = portfolios;
     }
 }
